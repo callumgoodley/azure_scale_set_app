@@ -1,0 +1,27 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - python
+  - python3
+  - python3-pip
+  - python3-venv
+write_files:
+  - owner:  callumgoodley@googlemail.com:callumgoodley@googlemail.com
+    path: ./app.py
+    content: |
+      from flask import Flask
+      import socket
+
+      app = Flask(__name__)
+
+      host = socket.gethostname()
+
+      @app.route('/')
+      def index():
+           return "<h1>Hello World, I'm deployed automatically on " + str(host) + " :)</h1>"
+
+      if __name__ == '__main__':
+          app.run(debug=True, host='0.0.0.0')
+runcmd:
+   - pip3 install flask
+   - python3 app.py
